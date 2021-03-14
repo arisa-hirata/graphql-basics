@@ -23,17 +23,20 @@ const posts = [{
     id: '1',
     title: 'Happy Feet',
     body: 'It is a movie about penguins',
-    published: true
+    published: true,
+    author: '1'
 }, {
     id: '2',
     title: 'Frozen',
     body: 'Disney Movie created by Pixar',
-    published: true
+    published: true,
+    author: '1'
 }, {
     id: '3',
     title: 'Lion King',
     body: 'Disney Movie about lion',
-    published: true
+    published: true,
+    author: '2'
 }]
 
 
@@ -59,6 +62,7 @@ const typeDefs = `
         title: String!
         body: String!
         published: Boolean!
+        author: User!
     }
 `
 
@@ -101,6 +105,13 @@ const resolvers = {
                 body: 'This is a body',
                 published: false
             }
+        }
+    },
+    Post: {
+        author(parent, args, ctx, info) {
+            return users.find((user) => {
+                return user.id === parent.author
+            })
         }
     }
 }
