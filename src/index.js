@@ -5,33 +5,44 @@ import { GraphQLServer } from 'graphql-yoga';
 //  Type definitions (schema)
 const typeDefs = `
     type Query {
+        me: User!
+        post: Post!
+    }
+
+    type User {
+        id: ID!
+        name: String!
+        email: String!
+        age: Int
+    }
+
+    type Post {
+        id: ID!
         title: String!
-        price: Float!
-        releaseYear: Int
-        rating: Float
-        inStock: Boolean!
+        body: String!
+        published: Boolean!
     }
 `
 
 //  Resolvers
 const resolvers = {
     Query: {
-        title() {
-            return 'dress'
+        me() {
+            return {
+                id: '1234456',
+                name: 'Mike',
+                email: 'mike@gmail.com',
+                age: 28
+            }
         },
-        price() {
-            return 99.9
-        },
-        releaseYear() {
-            return 2021
-        },
-        rating() {
-            return 4.8
-        },
-        inStock() {
-            return true
+        post() {
+            return {
+                id: '999999',
+                title: 'My First Post',
+                body: 'This is a body',
+                published: false
+            }
         }
-
     }
 }
 
