@@ -1,8 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
 
 const Mutation = {
-    createUser(parent, args, ctx, info) {
-        const emailTaken = users.some((user) => user.email === args.data.email)
+    createUser(parent, args, { db }, ctx, info) {
+        const emailTaken = db.users.some((user) => user.email === args.data.email)
 
         if (emailTaken) {
             throw new Error('Email taken');
@@ -13,7 +13,7 @@ const Mutation = {
             ...args.data
         }
 
-        users.push(user)
+        db.users.push(user)
 
         return user
     },
@@ -70,8 +70,8 @@ const Mutation = {
 
 
     },
-    createPost(parent, args, { db }, info) {
-        const userExists = users.some((user) => user.id === args.data.author)
+    createPost(parent, args, { db, pubsub }, info) {
+        const userExists = db.users.some((user) => user.id === args.data.author)
 
         if (!userExists) {
             throw new Error('User not found')
@@ -82,7 +82,11 @@ const Mutation = {
             ...args.data
         }
 
-        posts.push(post)
+        db.posts.push(post)
+
+        if (args.data.published) {
+            pubsub.publish('post', { post })
+        }
 
         return post;
     },
